@@ -1,47 +1,52 @@
 # Personal Bookmarks API
 
-A RESTful API built with Node.js, Express, and SQLite for managing personal URL bookmarks. This project demonstrates CRUD operations, input validation, and data persistence without external database servers.
+A RESTful API built with Node.js, Express, and SQLite for managing personal URL bookmarks. This project demonstrates backend fundamentals including RESTful design, CRUD operations, input validation, and data persistence without external database servers.
 
 ## Features
 - **Create** new bookmarks with title, URL, and optional description.
-- **Read** all bookmarks or retrieve specific ones by ID.
+- **Read** all bookmarks or retrieve specific ones by unique ID.
 - **Update** existing bookmark details.
 - **Delete** bookmarks.
-- **Validation**: Ensures URLs are valid and titles are present.
-- **Persistence**: Uses SQLite to save data across server restarts.
+- **Validation**: Enforces valid URL formats and required titles using the `validator` library.
+- **Persistence**: Uses a file-based SQLite database (`bookmarks.db`) to ensure data survives server restarts.
 
 ## Prerequisites
 - [Node.js](https://nodejs.org/) (v14 or higher recommended)
-- [npm](https://www.npmjs.com/) (usually comes with Node.js)
+- [npm](https://www.npmjs.com/) (typically included with Node.js)
 
 ## Installation and Setup
 
-1. **Clone the repository** (or navigate to the project folder).
-2. **Install dependencies**:
+1. **Clone the repository** (or download the source code):
    ```bash
-   npm install
+   git clone https://github.com/sunil-polupalli/bookmarks-api.git
+   cd bookmarks-api
    ```
 
+2.  **Install dependencies**:
+
+    ```bash
+    npm install
+    ```
 
 3.  **Initialize the Database**:
-    The application uses a file-based SQLite database (`bookmarks.db`). This file will be automatically created in the root directory the first time you run the server. No manual script execution is required.
+    The application uses a file-based SQLite database. The database file (`bookmarks.db`) and the required table schema will be **automatically created** in the root directory the first time you run the server. No manual SQL scripts are required.
 
 ## Running the Server
 
-To start the application:
+To start the application, run:
 
 ```bash
 node server.js
 ```
 
-You should see the output:
+You should see the following output indicating success:
 
 > Server running on http://localhost:3000
 > Connected to the SQLite database.
 
 ## API Documentation
 
-Base URL: `http://localhost:3000`
+**Base URL:** `http://localhost:3000`
 
 ### 1\. Create a Bookmark
 
@@ -64,7 +69,7 @@ Creates a new bookmark.
       "url": "[https://www.google.com](https://www.google.com)",
       "title": "Google",
       "description": "Search engine",
-      "created_at": "2023-10-27T10:00:00.000Z"
+      "created_at": "2025-12-14T10:00:00.000Z"
     }
     ```
   * **Error Response (400 Bad Request):**
@@ -85,7 +90,7 @@ Retrieves a list of all saved bookmarks.
         "url": "[https://www.google.com](https://www.google.com)",
         "title": "Google",
         "description": "Search engine",
-        "created_at": "2023-10-27T10:00:00.000Z"
+        "created_at": "2025-12-14T10:00:00.000Z"
       }
     ]
     ```
@@ -103,7 +108,7 @@ Retrieves a single bookmark by its unique ID.
       "url": "[https://www.google.com](https://www.google.com)",
       "title": "Google",
       "description": "Search engine",
-      "created_at": "2023-10-27T10:00:00.000Z"
+      "created_at": "2025-12-14T10:00:00.000Z"
     }
     ```
   * **Error Response (404 Not Found):**
@@ -132,7 +137,7 @@ Updates an existing bookmark's details.
       "url": "[https://www.google.co.in](https://www.google.co.in)",
       "title": "Google India",
       "description": "Updated description",
-      "created_at": "2023-10-27T10:00:00.000Z"
+      "created_at": "2025-12-14T10:00:00.000Z"
     }
     ```
   * **Error Response (404 Not Found):**
@@ -153,11 +158,11 @@ Deletes a bookmark by its unique ID.
 
 ## Project Structure
 
-The project follows the MVC (Model-View-Controller) architecture:
+The project follows a modular MVC (Model-View-Controller) architecture to separate concerns:
 
-  - `src/config/database.js`: Manages the SQLite connection and table initialization.
-  - `src/controllers/`: Contains the logic for handling requests and validating input.
-  - `src/models/`: Handles direct database SQL interactions.
-  - `src/routes/`: Defines the API endpoints and maps them to controllers.
-  - `server.js`: The entry point that starts the Express server.
+  - `server.js`: The application entry point.
+  - `src/config/database.js`: Manages the SQLite connection and automatic table creation.
+  - `src/controllers/`: Contains the logic for handling requests, validation, and responses.
+  - `src/models/`: Handles direct database interactions (SQL queries).
+  - `src/routes/`: Defines the API endpoints and maps them to the appropriate controller functions.
 
