@@ -19,7 +19,7 @@ This API allows users to store, retrieve, update, and delete bookmarks. It featu
 
 1.  **Clone the repository** (or download source):
     ```bash
-    git clone <your-repo-url>
+    git clone https://github.com/sunil-polupalli/bookmarks-api.git
     cd bookmarks-api
     ```
 
