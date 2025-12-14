@@ -1,48 +1,62 @@
 # Personal Bookmarks API
 
-A RESTful API built with Node.js, Express, and SQLite for managing personal URL bookmarks. This project demonstrates backend fundamentals including RESTful design, CRUD operations, input validation, and data persistence without external database servers.
+A RESTful API built with Node.js, Express, and SQLite for managing personal URL bookmarks. This project is designed to demonstrate backend development fundamentals, including RESTful architecture, CRUD operations, input validation, and data persistence.
 
-## Features
-- **Create** new bookmarks with title, URL, and optional description.
-- **Read** all bookmarks or retrieve specific ones by unique ID.
-- **Update** existing bookmark details.
-- **Delete** bookmarks.
-- **Validation**: Enforces valid URL formats and required titles using the `validator` library.
-- **Persistence**: Uses a file-based SQLite database (`bookmarks.db`) to ensure data survives server restarts.
+## Project Overview
+
+This API allows users to store, retrieve, update, and delete bookmarks. It features:
+* **MVC Architecture:** A logical separation of concerns (Models, Views/Controllers, Routes).
+* **Data Persistence:** Uses SQLite (`bookmarks.db`) to ensure data remains available after server restarts.
+* **Input Validation:** Robust checks for required fields and valid URL formats.
+* **Standardized Responses:** consistent JSON structures for success and error states.
 
 ## Prerequisites
-- [Node.js](https://nodejs.org/) (v14 or higher recommended)
-- [npm](https://www.npmjs.com/) (typically included with Node.js)
 
-## Installation and Setup
+* [Node.js](https://nodejs.org/) (v14 or higher)
+* [npm](https://www.npmjs.com/) (included with Node.js)
 
-1. **Clone the repository** (or download the source code):
-   ```bash
-   git clone https://github.com/sunil-polupalli/bookmarks-api.git
-   cd bookmarks-api
-   ```
+## Installation & Setup
 
-2.  **Install dependencies**:
+1.  **Clone the repository** (or download source):
+    ```bash
+    git clone <your-repo-url>
+    cd bookmarks-api
+    ```
 
+2.  **Install Dependencies**:
     ```bash
     npm install
     ```
 
-3.  **Initialize the Database**:
-    The application uses a file-based SQLite database. The database file (`bookmarks.db`) and the required table schema will be **automatically created** in the root directory the first time you run the server. No manual SQL scripts are required.
+3.  **Database Initialization**:
+    * **No manual setup is required.**
+    * The application automatically checks for the `bookmarks.db` file in the root directory.
+    * If missing, it creates the file and initializes the `bookmarks` table with the correct schema on the first run.
 
-## Running the Server
+## Running the Application
 
-To start the application, run:
+To start the server:
 
 ```bash
 node server.js
 ```
 
-You should see the following output indicating success:
+**Expected Output:**
 
 > Server running on http://localhost:3000
 > Connected to the SQLite database.
+
+## Database Schema
+
+The SQLite database contains a single table `bookmarks`:
+
+| Column        | Type    | Description                                      |
+| :---          | :---    | :---                                             |
+| `id`          | INTEGER | Primary Key, Auto-incremented.                   |
+| `url`         | TEXT    | Required. The link to the bookmark.              |
+| `title`       | TEXT    | Required. A short name for the bookmark.         |
+| `description` | TEXT    | Optional. Additional details.                    |
+| `created_at`  | TEXT    | Required. ISO 8601 Timestamp of creation.        |
 
 ## API Documentation
 
@@ -50,10 +64,9 @@ You should see the following output indicating success:
 
 ### 1\. Create a Bookmark
 
-Creates a new bookmark.
-
-  * **Endpoint:** `POST /bookmarks`
-  * **Content-Type:** `application/json`
+  * **Method:** `POST`
+  * **Endpoint:** `/bookmarks`
+  * **Description:** Creates a new bookmark.
   * **Request Body:**
     ```json
     {
@@ -74,14 +87,14 @@ Creates a new bookmark.
     ```
   * **Error Response (400 Bad Request):**
     ```json
-    { "errors": ["Valid URL is required."] }
+    { "errors": ["Valid URL is required.", "Title is required."] }
     ```
 
 ### 2\. Get All Bookmarks
 
-Retrieves a list of all saved bookmarks.
-
-  * **Endpoint:** `GET /bookmarks`
+  * **Method:** `GET`
+  * **Endpoint:** `/bookmarks`
+  * **Description:** Retrieves all stored bookmarks.
   * **Success Response (200 OK):**
     ```json
     [
@@ -89,28 +102,17 @@ Retrieves a list of all saved bookmarks.
         "id": 1,
         "url": "[https://www.google.com](https://www.google.com)",
         "title": "Google",
-        "description": "Search engine",
-        "created_at": "2025-12-14T10:00:00.000Z"
+        ...
       }
     ]
     ```
 
 ### 3\. Get Bookmark by ID
 
-Retrieves a single bookmark by its unique ID.
-
-  * **Endpoint:** `GET /bookmarks/:id`
-  * **Example:** `GET /bookmarks/1`
-  * **Success Response (200 OK):**
-    ```json
-    {
-      "id": 1,
-      "url": "[https://www.google.com](https://www.google.com)",
-      "title": "Google",
-      "description": "Search engine",
-      "created_at": "2025-12-14T10:00:00.000Z"
-    }
-    ```
+  * **Method:** `GET`
+  * **Endpoint:** `/bookmarks/:id`
+  * **Description:** Retrieves a specific bookmark.
+  * **Success Response (200 OK):** Returns the bookmark object.
   * **Error Response (404 Not Found):**
     ```json
     { "error": "Bookmark not found" }
@@ -118,51 +120,51 @@ Retrieves a single bookmark by its unique ID.
 
 ### 4\. Update Bookmark
 
-Updates an existing bookmark's details.
-
-  * **Endpoint:** `PUT /bookmarks/:id`
-  * **Content-Type:** `application/json`
-  * **Request Body:**
-    ```json
-    {
-      "url": "[https://www.google.co.in](https://www.google.co.in)",
-      "title": "Google India",
-      "description": "Updated description"
-    }
-    ```
-  * **Success Response (200 OK):**
-    ```json
-    {
-      "id": 1,
-      "url": "[https://www.google.co.in](https://www.google.co.in)",
-      "title": "Google India",
-      "description": "Updated description",
-      "created_at": "2025-12-14T10:00:00.000Z"
-    }
-    ```
-  * **Error Response (404 Not Found):**
-    ```json
-    { "error": "Bookmark not found" }
-    ```
+  * **Method:** `PUT`
+  * **Endpoint:** `/bookmarks/:id`
+  * **Description:** Updates an existing bookmark.
+  * **Request Body:** Same as Create (must include url and title).
+  * **Success Response (200 OK):** Returns the updated object.
+  * **Error Response (404 Not Found)** or **(400 Bad Request)**.
 
 ### 5\. Delete Bookmark
 
-Deletes a bookmark by its unique ID.
-
-  * **Endpoint:** `DELETE /bookmarks/:id`
-  * **Success Response (204 No Content):** (Empty response body)
+  * **Method:** `DELETE`
+  * **Endpoint:** `/bookmarks/:id`
+  * **Description:** Permanently removes a bookmark.
+  * **Success Response (204 No Content):** Empty body.
   * **Error Response (404 Not Found):**
     ```json
     { "error": "Bookmark not found" }
     ```
 
-## Project Structure
+## Testing Guide (cURL)
 
-The project follows a modular MVC (Model-View-Controller) architecture to separate concerns:
+You can verify the API functionality using these commands (Command Prompt):
 
-  - `server.js`: The application entry point.
-  - `src/config/database.js`: Manages the SQLite connection and automatic table creation.
-  - `src/controllers/`: Contains the logic for handling requests, validation, and responses.
-  - `src/models/`: Handles direct database interactions (SQL queries).
-  - `src/routes/`: Defines the API endpoints and maps them to the appropriate controller functions.
+**Create:**
+
+```bash
+curl -X POST http://localhost:3000/bookmarks -H "Content-Type: application/json" -d "{\"url\": \"[https://example.com](https://example.com)\", \"title\": \"Example\"}"
+```
+
+**Get All:**
+
+```bash
+curl http://localhost:3000/bookmarks
+```
+
+**Delete (ID 1):**
+
+```bash
+curl -X DELETE http://localhost:3000/bookmarks/1
+```
+
+## Project Structure (MVC)
+
+  * `server.js`: Application entry point.
+  * `src/config/database.js`: SQLite connection and schema definition.
+  * `src/controllers/`: Business logic and input validation.
+  * `src/models/`: SQL queries and database interaction.
+  * `src/routes/`: API route definitions.
 
